@@ -1,0 +1,44 @@
+{
+  "name": "steluan-ltd",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev":          "next dev",
+    "build":        "next build",
+    "start":        "next start",
+    "lint":         "next lint",
+    "type-check":   "tsc --noEmit",
+    "test":         "vitest run",
+    "test:watch":   "vitest",
+    "test:e2e":     "playwright test",
+    "db:migrate":   "supabase db push",
+    "db:seed":      "supabase db seed",
+    "db:reset":     "supabase db reset",
+    "db:types":     "supabase gen types typescript --local > src/types/database.ts",
+    "docker:build": "docker compose -f docker/docker-compose.yml build",
+    "docker:up":    "docker compose -f docker/docker-compose.yml up -d",
+    "docker:down":  "docker compose -f docker/docker-compose.yml down",
+    "docker:logs":  "docker compose -f docker/docker-compose.yml logs -f app",
+    "deploy:vercel":         "npx vercel --prod",
+    "deploy:vercel:preview": "npx vercel"
+  },
+  "dependencies": {
+    "@supabase/ssr":          "^0.6.1",
+    "@supabase/supabase-js":  "~2.45.4",
+    "next":                   "14.2.20",
+    "react":                  "^18.3.1",
+    "react-dom":               "^18.3.1",
+    "zod":                    "^3.23.8"
+  },
+  "devDependencies": {
+    "@playwright/test":    "^1.44.0",
+    "@types/node":         "^20.12.12",
+    "@types/react":        "^18.3.2",
+    "@types/react-dom":    "^18.3.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint":              "^8.57.1",
+    "eslint-config-next":  "14.2.20",
+    "typescript":          "^5.4.5",
+    "vitest":              "^1.6.0"
+  }
+}
