@@ -107,13 +107,24 @@ export async function updateProperty(
 
 // Soft delete — sets status to 'archived', never hard deletes.
 // Images and audit trail are preserved.
+//
+// Chains .select() and checks the result explicitly rather than only
+// checking `error`: without .select(), PostgREST returns a bare 204
+// No Content for UPDATE regardless of whether 0 or N rows matched —
+// if RLS silently excludes the row, supabase-js reports
+// { error: null, data: null } and this would appear to succeed while
+// leaving the database completely untouched.
 export async function deleteProperty(id: string): Promise<void> {
   const supabase = createClient()
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('properties')
     .update({ status: 'archived' })
     .eq('id', id)
+    .select('id')
   if (error) throw error
+  if (!data || data.length === 0) {
+    throw new Error('Could not delete this property — you may not have permission, or it may already be gone.')
+  }
 }
 
 // ── Image management ──────────────────────────────────────────
@@ -173,12 +184,18 @@ export async function deletePropertyImage(
   const supabase = createClient()
   // Remove file from storage first
   await supabase.storage.from('property-images').remove([storagePath])
-  // Remove DB record
-  const { error } = await supabase
+  // Remove DB record — .select() lets us detect an RLS-blocked delete
+  // (0 rows affected) instead of silently reporting success. See
+  // deleteProperty() above for why this matters.
+  const { data, error } = await supabase
     .from('property_images')
     .delete()
     .eq('id', imageId)
+    .select('id')
   if (error) throw error
+  if (!data || data.length === 0) {
+    throw new Error('Could not delete this image — you may not have permission, or it may already be gone.')
+  }
 }
 
 export async function setPrimaryImage(
@@ -191,12 +208,18 @@ export async function setPrimaryImage(
     .from('property_images')
     .update({ is_primary: false })
     .eq('property_id', propertyId)
-  // Set new primary — DB trigger updates property.primary_image
-  const { error } = await supabase
+  // Set new primary — DB trigger updates property.primary_image.
+  // .select() lets us detect an RLS-blocked update instead of
+  // silently reporting success — see deleteProperty() above.
+  const { data, error } = await supabase
     .from('property_images')
     .update({ is_primary: true })
     .eq('id', imageId)
+    .select('id')
   if (error) throw error
+  if (!data || data.length === 0) {
+    throw new Error('Could not set this image as primary — you may not have permission, or it may already be gone.')
+  }
 }
 
 // ── Viewing requests ──────────────────────────────────────────
