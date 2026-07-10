@@ -2,13 +2,25 @@
 
 > ⚠️ **DEFERRED — requires Next.js 15+.** `@opennextjs/cloudflare`
 > dropped Next.js 14 support (Cloudflare's own docs confirm Next 14
-> support was dropped Q1 2026). Steluan currently runs on Next 14.2.20
+> support was dropped Q1 2026). Steluan currently runs on Next 14.2.x
 > and `@opennextjs/cloudflare` / `wrangler` were deliberately removed
 > from `package.json` to keep `npm install` working. Do not add them
 > back until Steluan has been upgraded to Next.js 15.5.18+ or 16.2.6+
 > — that upgrade should be its own planned migration, not a side
-> effect of chasing a peer-dependency error. Everything below is
-> accurate for when that migration happens.
+> effect of chasing a peer-dependency error.
+>
+> **`wrangler.jsonc` and `open-next.config.ts` have also been removed
+> from the project root** — not just the packages. Next.js's build-time
+> type-checker scans every `.ts` file in the project via `tsconfig.json`'s
+> `**/*.ts` glob, whether anything imports it or not. Leaving
+> `open-next.config.ts` in place with `@opennextjs/cloudflare`
+> uninstalled broke both `next build` and `npm run type-check` (and
+> so would have broken CI the first time `ci.yml` actually ran)
+> with `Cannot find module '@opennextjs/cloudflare'` — a file that's
+> never executed by the app still gets type-checked. Recreate both
+> files from the snippets below only after the Next 15 migration is
+> done and the packages are reinstalled — don't add them back before
+> that, even just for reference.
 
 Deploys the Next.js app to Cloudflare's global edge network using
 the OpenNext adapter. Free tier: 100,000 requests/day.
@@ -59,7 +71,7 @@ Create `wrangler.jsonc` in the project root:
       "$schema": "node_modules/wrangler/config-schema.json",
       "name": "steluan-ltd",
       "compatibility_flags": ["nodejs_compat"],
-      "compatibility_date": "2025-04-01",
+      "compatibility_date": "2025-09-01",
       "assets": {
         "directory": ".open-next/assets",
         "binding": "ASSETS"
@@ -67,12 +79,24 @@ Create `wrangler.jsonc` in the project root:
       "main": ".open-next/worker.js",
       "observability": {
         "enabled": true
+      },
+      "env": {
+        "staging": {
+          "name": "steluan-ltd-staging",
+          "vars": {
+            "NEXT_PUBLIC_APP_URL": "https://staging.steluan.co.ke"
+          }
+        }
       }
     }
 
-> IMPORTANT: Set compatibility_date to 2025-04-01 or later.
-> Earlier dates cause process.env to be empty at runtime — Zod
-> validation fails silently and the app breaks in production.
+> IMPORTANT: compatibility_date must be 2025-05-05 or later —
+> earlier dates cause a `FinalizationRegistry is not defined` build
+> error. It must also be 2025-04-01 or later for a separate reason:
+> earlier dates leave process.env empty at runtime, so Zod validation
+> fails silently and the app breaks in production. 2025-09-01 clears
+> both thresholds with margin — bump it further if either constraint
+> changes again by the time you actually do this migration.
 
 ---
 
