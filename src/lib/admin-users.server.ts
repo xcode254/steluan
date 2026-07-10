@@ -62,6 +62,20 @@ export interface AdminUserRow {
   last_sign_in_at:  string | null
 }
 
+// @supabase/auth-js's User type never declared `banned_until`, even
+// though GoTrue's actual admin API response includes it (confirmed in
+// Supabase's own self-hosted Auth API docs, and in multiple open
+// supabase-js issues — e.g. supabase/supabase-js#1376). Declaring the
+// minimal shape we actually read off each user works around the gap
+// without loosening types anywhere else in this file.
+interface GoTrueAdminUser {
+  id:               string
+  email?:           string
+  created_at:       string
+  last_sign_in_at?: string | null
+  banned_until?:    string | null
+}
+
 // Merges auth.users (email, ban status, timestamps — only visible
 // via the service-role admin API) with public.profiles (role,
 // full_name — the app's own data). Never expose auth.users directly
@@ -85,7 +99,7 @@ export async function listAllUsersWithAuth(): Promise<AdminUserRow[]> {
 
   const profileMap = new Map(profiles.map((p) => [p.id, p]))
 
-  return authList.users
+  return (authList.users as GoTrueAdminUser[])
     .map((u) => {
       const profile = profileMap.get(u.id)
       const isSuspended = !!u.banned_until && new Date(u.banned_until) > new Date()
