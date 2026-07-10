@@ -21,7 +21,14 @@ export class AdminAuthError extends Error {
 // A timeout is strictly better than a hang: the caller gets a real
 // error it can catch and degrade around, rather than a page that
 // never finishes rendering.
-function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+// Accepts PromiseLike, not just Promise — Supabase's query builders
+// (e.g. admin.from('profiles').select(...)) are "thenables" that work
+// fine with await, but aren't nominally typed as Promise<T>. Requiring
+// Promise<T> here made generic inference silently fall back to
+// `unknown` for those calls specifically, while plain async-function
+// calls like auth.admin.listUsers() inferred correctly — PromiseLike
+// is the interface both actually satisfy.
+function withTimeout<T>(promise: PromiseLike<T>, ms: number, label: string): Promise<T> {
   return Promise.race([
     promise,
     new Promise<T>((_, reject) =>
