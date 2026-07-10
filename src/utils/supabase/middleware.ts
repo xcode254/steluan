@@ -29,6 +29,19 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
+  // Redirects must carry forward any cookies auth.getUser() just
+  // refreshed onto supabaseResponse — a fresh NextResponse.redirect()
+  // doesn't have them. Dropping a rotated session cookie here is what
+  // breaks the session for everything downstream, including
+  // client-side calls this middleware never even touches.
+  function redirectWithFreshCookies(url: URL | string) {
+    const redirect = NextResponse.redirect(url)
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirect.cookies.set(cookie)
+    })
+    return redirect
+  }
+
   // Refresh session — do NOT remove this call
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -42,7 +55,7 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     url.searchParams.set('redirect', path)
-    return NextResponse.redirect(url)
+    return redirectWithFreshCookies(url)
   }
 
   // Logged in but a viewer trying to list/edit a property — role check
@@ -55,7 +68,7 @@ export async function updateSession(request: NextRequest) {
       .eq('id', user.id)
       .single()
     if (!profile || profile.role === 'viewer') {
-      return NextResponse.redirect(new URL('/', request.url))
+      return redirectWithFreshCookies(new URL('/', request.url))
     }
   }
 
