@@ -1,13 +1,27 @@
 'use client'
 
 // app/login/page.tsx
-import { useState } from 'react'
+//
+// useSearchParams() forces Next.js to bail out of static prerendering
+// for whatever calls it directly, unless that call is wrapped in a
+// Suspense boundary — see https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
+// Splitting into an outer page (does the wrapping) and an inner form
+// component (does the actual work) is the standard fix.
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { signInWithEmail, signInWithGoogle } from '@/lib/auth'
 import { theme } from '@/styles/theme'
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
+  )
+}
+
+function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/'
