@@ -5,6 +5,21 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import type { Database } from '../../types/database'
 
+// Vercel's edge network can cache a middleware response that carries
+// a freshly-rotated session cookie, then serve that same cached
+// response — with an already-invalidated refresh token — to the next
+// request. That's what "works once, breaks on next navigation" is:
+// the browser receives a stale Set-Cookie from cache, not a real one.
+// @supabase/ssr v0.10.0+ passes cache headers to setAll automatically;
+// below that (we're on 0.6.x) they must be set manually. Applying
+// this unconditionally, on every response this function returns, is
+// the documented fix — see:
+// https://supabase.com/docs/guides/auth/server-side/advanced-guide#cdn-and-reverse-proxy-caching
+function withNoStore<T extends NextResponse>(response: T): T {
+  response.headers.set('Cache-Control', 'private, no-store')
+  return response
+}
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
@@ -39,7 +54,7 @@ export async function updateSession(request: NextRequest) {
     supabaseResponse.cookies.getAll().forEach((cookie) => {
       redirect.cookies.set(cookie)
     })
-    return redirect
+    return withNoStore(redirect)
   }
 
   // Refresh session — do NOT remove this call
@@ -72,5 +87,5 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
-  return supabaseResponse
+  return withNoStore(supabaseResponse)
 }
