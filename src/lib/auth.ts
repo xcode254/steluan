@@ -1,6 +1,7 @@
 // src/lib/auth.ts
 // Auth actions updated for @supabase/ssr browser client
 import { createClient } from '../utils/supabase/client'
+import { toError } from './errors'
 import type { UserRole, Profile } from '../types/database'
 
 const PERMISSIONS: Record<UserRole, Record<string, boolean>> = {
@@ -23,7 +24,7 @@ export function canEditProperty(user: Profile | null, agentId: string): boolean 
 export async function signInWithEmail(email: string, password: string) {
   const supabase = createClient()
   const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-  if (error) throw error
+  if (error) throw toError(error, 'Could not sign in.')
   return data
 }
 
@@ -36,7 +37,7 @@ export async function signInWithGoogle() {
       queryParams: { access_type: 'offline', prompt: 'consent' },
     },
   })
-  if (error) throw error
+  if (error) throw toError(error, 'Could not sign in with Google.')
   return data
 }
 
@@ -47,14 +48,14 @@ export async function signUp(email: string, password: string, fullName: string) 
     password,
     options: { data: { full_name: fullName } },
   })
-  if (error) throw error
+  if (error) throw toError(error, 'Could not create your account.')
   return data
 }
 
 export async function signOut() {
   const supabase = createClient()
   const { error } = await supabase.auth.signOut()
-  if (error) throw error
+  if (error) throw toError(error, 'Could not sign out.')
 }
 
 export async function resetPassword(email: string) {
@@ -62,7 +63,7 @@ export async function resetPassword(email: string) {
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${window.location.origin}/auth/reset-password`,
   })
-  if (error) throw error
+  if (error) throw toError(error, 'Could not send a reset link.')
 }
 
 export async function getProfile(userId: string): Promise<Profile | null> {
@@ -83,6 +84,6 @@ export async function setUserRole(targetUserId: string, role: UserRole) {
     .eq('id', targetUserId)
     .select()
     .single()
-  if (error) throw error
+  if (error) throw toError(error, 'Could not update this role.')
   return data
 }

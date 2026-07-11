@@ -3,6 +3,7 @@
 // Components never import from @supabase/ssr directly.
 
 import { createClient } from '../utils/supabase/client'
+import { toError } from './errors'
 import type { Property, PropertyImage } from '../types/database'
 
 const PROPERTY_SELECT = `
@@ -33,7 +34,7 @@ export async function getProperties(opts: {
   if (opts.agentId) q = q.eq('agent_id', opts.agentId)
 
   const { data, error } = await q
-  if (error) throw error
+  if (error) throw toError(error)
   return data as Property[]
 }
 
@@ -44,7 +45,7 @@ export async function getProperty(id: string): Promise<Property> {
     .select(PROPERTY_SELECT)
     .eq('id', id)
     .single()
-  if (error) throw error
+  if (error) throw toError(error)
   return data as Property
 }
 
@@ -71,7 +72,7 @@ export async function searchProperties(params: {
     lim:           params.limit     ?? 20,
     offs:          params.offset    ?? 0,
   })
-  if (error) throw error
+  if (error) throw toError(error)
   return data as Property[]
 }
 
@@ -86,7 +87,7 @@ export async function createProperty(
     .insert(payload)
     .select(PROPERTY_SELECT)
     .single()
-  if (error) throw error
+  if (error) throw toError(error, 'Could not create this property.')
   return data as Property
 }
 
@@ -101,7 +102,7 @@ export async function updateProperty(
     .eq('id', id)
     .select(PROPERTY_SELECT)
     .single()
-  if (error) throw error
+  if (error) throw toError(error, 'Could not update this property.')
   return data as Property
 }
 
@@ -121,7 +122,7 @@ export async function deleteProperty(id: string): Promise<void> {
     .update({ status: 'archived' })
     .eq('id', id)
     .select('id')
-  if (error) throw error
+  if (error) throw toError(error)
   if (!data || data.length === 0) {
     throw new Error('Could not delete this property — you may not have permission, or it may already be gone.')
   }
@@ -144,7 +145,7 @@ export async function uploadPropertyImage(opts: {
   const { error: uploadError } = await supabase.storage
     .from('property-images')
     .upload(path, opts.file, { cacheControl: '3600', upsert: false })
-  if (uploadError) throw uploadError
+  if (uploadError) throw toError(uploadError, 'Could not upload this image.')
 
   // 2. Get public URL
   const { data: urlData } = supabase.storage
@@ -173,7 +174,7 @@ export async function uploadPropertyImage(opts: {
     })
     .select()
     .single()
-  if (error) throw error
+  if (error) throw toError(error, 'Image uploaded, but saving its record failed.')
   return data as PropertyImage
 }
 
@@ -192,7 +193,7 @@ export async function deletePropertyImage(
     .delete()
     .eq('id', imageId)
     .select('id')
-  if (error) throw error
+  if (error) throw toError(error)
   if (!data || data.length === 0) {
     throw new Error('Could not delete this image — you may not have permission, or it may already be gone.')
   }
@@ -216,7 +217,7 @@ export async function setPrimaryImage(
     .update({ is_primary: true })
     .eq('id', imageId)
     .select('id')
-  if (error) throw error
+  if (error) throw toError(error)
   if (!data || data.length === 0) {
     throw new Error('Could not set this image as primary — you may not have permission, or it may already be gone.')
   }
@@ -239,7 +240,7 @@ export async function submitViewingRequest(payload: {
     .insert(payload)
     .select()
     .single()
-  if (error) throw error
+  if (error) throw toError(error, 'Could not submit your viewing request.')
   return data
 }
 
@@ -250,7 +251,7 @@ export async function getViewingRequestsForAgent(agentId: string) {
     .select('*, property:properties(id, name, primary_image, location)')
     .eq('properties.agent_id', agentId)
     .order('created_at', { ascending: false })
-  if (error) throw error
+  if (error) throw toError(error)
   return data
 }
 
@@ -266,6 +267,6 @@ export async function updateViewingRequestStatus(
     .eq('id', id)
     .select()
     .single()
-  if (error) throw error
+  if (error) throw toError(error)
   return data
 }
