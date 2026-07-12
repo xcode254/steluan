@@ -1,6 +1,12 @@
 // src/utils/supabase/middleware.ts
 // Middleware client — refreshes sessions on every request
 // Replaces: createMiddlewareClient from auth-helpers-nextjs
+//
+// @supabase/ssr / @supabase/supabase-js are pinned to exact versions
+// in package.json — see the note in server.ts for why. The manual
+// Cache-Control header below (withNoStore) is what actually fixes the
+// CDN-caching-a-session-cookie bug; it does NOT depend on the ssr
+// package version, which is why we don't need a newer one for that.
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import type { Database } from '../../types/database'
