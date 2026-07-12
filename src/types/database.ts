@@ -135,5 +135,29 @@ export interface Database {
         Returns: UserRole
       }
     }
+    // Present as an empty placeholder — no database views defined.
+    Views: {
+      [_ in never]: never
+    }
+    // Maps our actual Postgres enums (migration 001/005). Recent
+    // @supabase/supabase-js versions expect Views/Enums/CompositeTypes
+    // to be present on the Database type — even as empty placeholders
+    // — for its generic Row-type resolution to work at all. Omitting
+    // them (as this file previously did) can silently collapse Row
+    // types to `never` throughout the app, which is a much harder bug
+    // to trace back to "a few missing type keys" than this comment
+    // makes it sound.
+    Enums: {
+      user_role:         UserRole
+      property_status:   PropertyStatus
+      property_type:     PropertyType
+      property_category: PropertyCategory
+      property_tag:      PropertyTag
+      viewing_status:    ViewingStatus
+    }
+    // Present as an empty placeholder — no composite types defined.
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
 }
