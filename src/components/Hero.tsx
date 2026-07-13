@@ -21,29 +21,37 @@ export function Hero() {
   }
 
   return (
-    <div style={{ position: 'relative', height: 340, overflow: 'hidden' }}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1400&q=80"
-        alt=""
-        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(to right, rgba(13,31,60,0.88) 45%, rgba(13,31,60,0.25))',
-        }}
-      />
-      <div style={{ position: 'absolute', top: '50%', left: 48, transform: 'translateY(-58%)' }}>
-        <h1 style={{ color: '#fff', fontFamily: theme.font.display, fontSize: 40, fontWeight: 700, margin: 0, lineHeight: 1.12 }}>
-          Find Your
-          <br />
-          Dream Property
-        </h1>
-        <p style={{ color: 'rgba(255,255,255,0.8)', fontFamily: theme.font.body, fontSize: 14, marginTop: 8 }}>
-          Explore the best properties for sale &amp; rent in Kenya
-        </p>
+    // Outer wrapper has NO overflow:hidden — the search form is
+    // positioned to intentionally float below the image, and clipping
+    // here would cut it off. Only the inner box (image + gradient +
+    // heading) needs its own overflow:hidden to keep the image height
+    // fixed; the form is a sibling of that box, not a descendant, so
+    // it isn't subject to the same clipping.
+    <div style={{ position: 'relative' }}>
+      <div style={{ position: 'relative', height: 340, overflow: 'hidden' }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1400&q=80"
+          alt=""
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(to right, rgba(13,31,60,0.88) 45%, rgba(13,31,60,0.25))',
+          }}
+        />
+        <div style={{ position: 'absolute', top: '50%', left: 48, transform: 'translateY(-58%)' }}>
+          <h1 style={{ color: '#fff', fontFamily: theme.font.display, fontSize: 40, fontWeight: 700, margin: 0, lineHeight: 1.12 }}>
+            Find Your
+            <br />
+            Dream Property
+          </h1>
+          <p style={{ color: 'rgba(255,255,255,0.8)', fontFamily: theme.font.body, fontSize: 14, marginTop: 8 }}>
+            Explore the best properties for sale &amp; rent in Kenya
+          </p>
+        </div>
       </div>
 
       <form
@@ -57,10 +65,12 @@ export function Hero() {
           borderRadius: 8,
           padding: '14px 18px',
           display: 'flex',
+          flexWrap: 'wrap',
           gap: 10,
           alignItems: 'center',
+          justifyContent: 'center',
           boxShadow: '0 8px 40px rgba(0,0,0,0.18)',
-          width: '78%',
+          width: '90%',
           maxWidth: 720,
         }}
       >
@@ -80,7 +90,7 @@ export function Hero() {
           placeholder="Location (e.g. Nairobi)"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          style={{ ...selectStyle, flex: 1.4 }}
+          style={{ ...selectStyle, flex: '1 1 160px' }}
         />
         <button
           type="submit"
@@ -105,7 +115,7 @@ export function Hero() {
 }
 
 const selectStyle: React.CSSProperties = {
-  flex: 1,
+  flex: '1 1 120px',
   border: `1px solid ${theme.color.border}`,
   borderRadius: 4,
   padding: '9px 10px',
@@ -113,4 +123,5 @@ const selectStyle: React.CSSProperties = {
   fontSize: 13,
   color: '#333',
   background: '#fff',
+  minWidth: 0,
 }
