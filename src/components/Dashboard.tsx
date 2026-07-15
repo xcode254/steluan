@@ -3,6 +3,8 @@
 // src/components/Dashboard.tsx
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useAuthContext } from './AuthProvider'
 import { DeleteConfirmModal } from './DeleteConfirmModal'
 import { InviteUserModal } from './InviteUserModal'
 import { deleteProperty, updateViewingRequestStatus } from '@/lib/properties'
@@ -24,6 +26,8 @@ export function Dashboard({
   usersError?: string | null
   initialViewingRequests: ViewingRequest[]
 }) {
+  const router = useRouter()
+  const { signOut } = useAuthContext()
   const [properties, setProperties] = useState(initialProperties)
   const [users, setUsers] = useState(initialUsers)
   const [requests, setRequests] = useState(initialViewingRequests)
@@ -52,6 +56,11 @@ export function Dashboard({
   function flash(msg: string) {
     setNotice(msg)
     setTimeout(() => setNotice(''), 3500)
+  }
+
+  async function handleLogout() {
+    await signOut()
+    router.push('/')
   }
 
   async function handleConfirmDelete() {
@@ -143,11 +152,29 @@ export function Dashboard({
             {profile.role}
           </span>
         </div>
-        {profile.role !== 'viewer' && (
-          <Link href="/properties/new" style={{ background: theme.color.gold, color: '#fff', borderRadius: 6, padding: '10px 20px', fontFamily: theme.font.body, fontSize: 13, fontWeight: 700 }}>
-            + Add Property
-          </Link>
-        )}
+        <div style={{ display: 'flex', gap: 10 }}>
+          {profile.role !== 'viewer' && (
+            <Link href="/properties/new" style={{ background: theme.color.gold, color: '#fff', borderRadius: 6, padding: '10px 20px', fontFamily: theme.font.body, fontSize: 13, fontWeight: 700 }}>
+              + Add Property
+            </Link>
+          )}
+          <button
+            onClick={handleLogout}
+            style={{
+              background: 'none',
+              border: `1px solid ${theme.color.navy}`,
+              color: theme.color.navy,
+              borderRadius: 6,
+              padding: '10px 18px',
+              fontFamily: theme.font.body,
+              fontSize: 13,
+              fontWeight: 700,
+              cursor: 'pointer',
+            }}
+          >
+            Log out
+          </button>
+        </div>
       </div>
 
       {notice && (
