@@ -2,6 +2,7 @@
 
 // src/components/PropertyCard.tsx
 import { useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuthContext } from './AuthProvider'
@@ -48,13 +49,12 @@ export function PropertyCard({
         style={{ position: 'relative', height: 170, overflow: 'hidden' }}
       >
         {property.primary_image && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={property.primary_image}
             alt={property.name}
+            fill
+            sizes="(max-width: 768px) 100vw, 300px"
             style={{
-              width: '100%',
-              height: '100%',
               objectFit: 'cover',
               transform: hover ? 'scale(1.05)' : 'scale(1)',
               transition: 'transform 0.35s ease',
@@ -119,6 +119,7 @@ export function PropertyCard({
                 href={`/properties/${property.id}/edit`}
                 onClick={(e) => e.stopPropagation()}
                 style={iconButtonStyle}
+                aria-label={`Edit ${property.name}`}
               >
                 ✏️
               </Link>
@@ -130,6 +131,7 @@ export function PropertyCard({
                   onRequestDelete?.(property)
                 }}
                 style={{ ...iconButtonStyle, border: 'none', cursor: 'pointer' }}
+                aria-label={`Delete ${property.name}`}
               >
                 🗑️
               </button>

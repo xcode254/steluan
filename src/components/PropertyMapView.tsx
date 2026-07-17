@@ -7,6 +7,7 @@
 // without touching the data layer.
 
 import { useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { theme } from '@/styles/theme'
 import type { Property } from '@/types/database'
@@ -74,12 +75,15 @@ export function PropertyMapView({ properties }: { properties: Property[] }) {
       {selected && (
         <div style={{ flex: '1 1 260px', minWidth: 240, background: '#fff', borderRadius: 12, boxShadow: theme.shadow.card, padding: 20 }}>
           {selected.primary_image && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={selected.primary_image}
-              alt={selected.name}
-              style={{ width: '100%', height: 140, objectFit: 'cover', borderRadius: 8, marginBottom: 14 }}
-            />
+            <div style={{ position: 'relative', width: '100%', height: 140, borderRadius: 8, overflow: 'hidden', marginBottom: 14 }}>
+              <Image
+                src={selected.primary_image}
+                alt={selected.name}
+                fill
+                sizes="260px"
+                style={{ objectFit: 'cover' }}
+              />
+            </div>
           )}
           <div style={{ fontFamily: theme.font.display, fontWeight: 700, color: theme.color.navy, fontSize: 18 }}>
             {selected.currency} {Number(selected.price).toLocaleString()}

@@ -89,6 +89,14 @@ export function ImageUploadZone({
                 }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
+                {/* Intentionally plain <img>, not next/image: pending
+                    slots are blob: URLs from URL.createObjectURL(),
+                    which Next's image optimizer can't process (it
+                    fetches server-side; blob: URLs only exist in this
+                    browser tab). These are small upload-form
+                    thumbnails, not primary content, so it's not worth
+                    branching per-slot to optimize just the existing ones. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={slot.url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 {isPrimary && (
                   <div style={{ position: 'absolute', top: 4, left: 4, background: theme.color.gold, color: '#fff', fontSize: 9, fontWeight: 700, borderRadius: 3, padding: '1px 5px' }}>
@@ -114,6 +122,7 @@ export function ImageUploadZone({
                     type="button"
                     onClick={(e) => { e.stopPropagation(); onSetPrimary(slot.tempId) }}
                     title="Set as primary photo"
+                    aria-label="Set as primary photo"
                     style={{ background: theme.color.gold, border: 'none', color: '#fff', borderRadius: '50%', width: 26, height: 26, cursor: 'pointer', fontSize: 12 }}
                   >
                     ★
@@ -122,6 +131,7 @@ export function ImageUploadZone({
                     type="button"
                     onClick={(e) => { e.stopPropagation(); onRemove(slot.tempId) }}
                     title="Remove"
+                    aria-label="Remove photo"
                     style={{ background: theme.color.red, border: 'none', color: '#fff', borderRadius: '50%', width: 26, height: 26, cursor: 'pointer', fontSize: 13 }}
                   >
                     ✕

@@ -2,6 +2,7 @@
 
 // src/components/PropertyDetailView.tsx
 import { useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useAuthContext } from './AuthProvider'
 import { canEditProperty } from '@/lib/auth'
@@ -54,8 +55,14 @@ export function PropertyDetailView({
         <div style={{ flex: '2 1 420px' }}>
           <div style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', height: 360, background: '#eee' }}>
             {images[idx] && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={images[idx].url} alt={property.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <Image
+                src={images[idx].url}
+                alt={property.name}
+                fill
+                priority
+                sizes="(max-width: 900px) 100vw, 700px"
+                style={{ objectFit: 'cover' }}
+              />
             )}
             <div
               style={{
@@ -85,14 +92,15 @@ export function PropertyDetailView({
           {images.length > 1 && (
             <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
               {images.map((img, i) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   key={img.id}
                   src={img.url}
                   alt=""
+                  width={64}
+                  height={48}
                   onClick={() => setIdx(i)}
                   style={{
-                    width: 64, height: 48, objectFit: 'cover', borderRadius: 6, cursor: 'pointer',
+                    objectFit: 'cover', borderRadius: 6, cursor: 'pointer',
                     border: i === idx ? `2px solid ${theme.color.gold}` : '2px solid transparent',
                     opacity: i === idx ? 1 : 0.6,
                   }}

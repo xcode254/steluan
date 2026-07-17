@@ -2,6 +2,7 @@
 
 // src/components/Dashboard.tsx
 import { useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuthContext } from './AuthProvider'
@@ -214,8 +215,7 @@ export function Dashboard({
                 <tr key={p.id} style={{ borderBottom: `1px solid ${theme.color.border}`, background: i % 2 === 0 ? '#fff' : '#fafafa' }}>
                   <td style={{ padding: '10px 14px' }}>
                     {p.primary_image && (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={p.primary_image} alt="" style={{ width: 52, height: 40, objectFit: 'cover', borderRadius: 5 }} />
+                      <Image src={p.primary_image} alt="" width={52} height={40} style={{ objectFit: 'cover', borderRadius: 5 }} />
                     )}
                   </td>
                   <td style={{ padding: '10px 14px', fontFamily: theme.font.body, fontSize: 13, fontWeight: 700, color: theme.color.navy }}>

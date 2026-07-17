@@ -2,6 +2,7 @@
 
 // src/components/Hero.tsx
 import { useState } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { theme } from '@/styles/theme'
 
@@ -10,6 +11,8 @@ export function Hero() {
   const [category, setCategory] = useState('')
   const [type, setType] = useState('')
   const [location, setLocation] = useState('')
+  const [maxPrice, setMaxPrice] = useState('')
+  const [minBeds, setMinBeds] = useState('')
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault()
@@ -17,6 +20,8 @@ export function Hero() {
     if (category) params.set('category', category)
     if (type) params.set('type', type)
     if (location) params.set('location', location)
+    if (maxPrice) params.set('maxPrice', maxPrice)
+    if (minBeds) params.set('minBeds', minBeds)
     router.push(`/properties${params.toString() ? `?${params}` : ''}`)
   }
 
@@ -29,11 +34,13 @@ export function Hero() {
     // it isn't subject to the same clipping.
     <div style={{ position: 'relative' }}>
       <div style={{ position: 'relative', height: 340, overflow: 'hidden' }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1400&q=80"
           alt=""
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          fill
+          priority
+          sizes="100vw"
+          style={{ objectFit: 'cover' }}
         />
         <div
           style={{
@@ -92,6 +99,20 @@ export function Hero() {
           onChange={(e) => setLocation(e.target.value)}
           style={{ ...selectStyle, flex: '1 1 160px' }}
         />
+        <select value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} style={selectStyle}>
+          <option value="">Any price</option>
+          <option value="3000000">Up to KES 3M</option>
+          <option value="5000000">Up to KES 5M</option>
+          <option value="10000000">Up to KES 10M</option>
+          <option value="20000000">Up to KES 20M</option>
+        </select>
+        <select value={minBeds} onChange={(e) => setMinBeds(e.target.value)} style={selectStyle}>
+          <option value="">Any beds</option>
+          <option value="1">1+ beds</option>
+          <option value="2">2+ beds</option>
+          <option value="3">3+ beds</option>
+          <option value="4">4+ beds</option>
+        </select>
         <button
           type="submit"
           style={{
