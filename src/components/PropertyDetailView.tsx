@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { BedDouble, Bath, Ruler, Tag, MapPin, User, Pencil } from 'lucide-react'
 import { useAuthContext } from './AuthProvider'
 import { canEditProperty } from '@/lib/auth'
 import { ViewingRequestForm } from './ViewingRequestForm'
@@ -44,9 +45,12 @@ export function PropertyDetailView({
               fontFamily: theme.font.body,
               fontSize: 13,
               fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
             }}
           >
-            ✏️ Edit property
+            <Pencil size={14} /> Edit property
           </Link>
         )}
       </div>
@@ -137,20 +141,20 @@ export function PropertyDetailView({
             <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap', marginBottom: 12, fontFamily: theme.font.body, fontSize: 13, color: '#555' }}>
               {property.category !== 'land' && (
                 <>
-                  <span>🛏 {property.beds} beds</span>
-                  <span>🚿 {property.baths} baths</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><BedDouble size={15} /> {property.beds} beds</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><Bath size={15} /> {property.baths} baths</span>
                 </>
               )}
-              <span>📐 {property.sqm} sqm</span>
-              <span style={{ textTransform: 'capitalize' }}>🏷️ {property.category}</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><Ruler size={15} /> {property.sqm} sqm</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 5, textTransform: 'capitalize' }}><Tag size={15} /> {property.category}</span>
             </div>
-            <div style={{ color: theme.color.textMuted, fontSize: 12, fontFamily: theme.font.body, marginBottom: 16 }}>
-              📍 {property.location}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: theme.color.textMuted, fontSize: 12, fontFamily: theme.font.body, marginBottom: 16 }}>
+              <MapPin size={13} /> {property.location}
             </div>
 
             {property.agent && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, borderTop: `1px solid ${theme.color.border}`, paddingTop: 14, marginBottom: 18 }}>
-                <div style={{ width: 38, height: 38, borderRadius: '50%', background: '#dde4f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>👤</div>
+                <div style={{ width: 38, height: 38, borderRadius: '50%', background: '#dde4f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><User size={18} color={theme.color.navy} /></div>
                 <div>
                   <div style={{ fontFamily: theme.font.body, fontWeight: 700, color: theme.color.navy, fontSize: 13 }}>{property.agent.full_name}</div>
                   <div style={{ fontFamily: theme.font.body, fontSize: 11, color: theme.color.textMuted }}>Listing agent</div>

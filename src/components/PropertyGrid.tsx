@@ -2,6 +2,7 @@
 
 // src/components/PropertyGrid.tsx
 import { useState } from 'react'
+import { List, Map } from 'lucide-react'
 import { PropertyCard } from './PropertyCard'
 import { PropertyMapView } from './PropertyMapView'
 import { DeleteConfirmModal } from './DeleteConfirmModal'
@@ -65,9 +66,13 @@ export function PropertyGrid({
                   fontFamily: theme.font.body,
                   fontSize: 12,
                   fontWeight: 600,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
                 }}
               >
-                {v === 'list' ? '☰ List View' : '🗺 Map View'}
+                {v === 'list' ? <List size={14} /> : <Map size={14} />}
+                {v === 'list' ? 'List View' : 'Map View'}
               </button>
             ))}
           </div>

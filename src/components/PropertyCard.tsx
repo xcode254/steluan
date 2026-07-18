@@ -5,6 +5,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { BedDouble, Ruler, MapPin, User, Pencil, Trash2 } from 'lucide-react'
 import { useAuthContext } from './AuthProvider'
 import { canEditProperty, can } from '@/lib/auth'
 import { theme } from '@/styles/theme'
@@ -82,6 +83,9 @@ export function PropertyCard({
             position: 'absolute',
             bottom: 10,
             left: 10,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
             background: 'rgba(13,31,60,0.8)',
             color: '#fff',
             borderRadius: 4,
@@ -90,7 +94,12 @@ export function PropertyCard({
             fontFamily: theme.font.body,
           }}
         >
-          {property.category === 'land' ? `📐 ${property.sqm} sqm` : `🛏 ${property.beds}`} · {property.type}
+          {property.category === 'land' ? (
+            <><Ruler size={11} /> {property.sqm} sqm</>
+          ) : (
+            <><BedDouble size={11} /> {property.beds}</>
+          )}
+          <span>· {property.type}</span>
         </span>
 
         {property.category !== 'house' && (
@@ -121,7 +130,7 @@ export function PropertyCard({
                 style={iconButtonStyle}
                 aria-label={`Edit ${property.name}`}
               >
-                ✏️
+                <Pencil size={14} color={theme.color.navy} />
               </Link>
             )}
             {showDelete && (
@@ -133,7 +142,7 @@ export function PropertyCard({
                 style={{ ...iconButtonStyle, border: 'none', cursor: 'pointer' }}
                 aria-label={`Delete ${property.name}`}
               >
-                🗑️
+                <Trash2 size={14} color={theme.color.red} />
               </button>
             )}
           </div>
@@ -150,8 +159,8 @@ export function PropertyCard({
         <div style={{ color: theme.color.navy, fontFamily: theme.font.display, fontSize: 13, marginTop: 3 }}>
           {property.name}
         </div>
-        <div style={{ color: theme.color.textMuted, fontSize: 11, fontFamily: theme.font.body, margin: '4px 0 10px' }}>
-          📍 {property.location} · {property.sqm} sqm
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: theme.color.textMuted, fontSize: 11, fontFamily: theme.font.body, margin: '4px 0 10px' }}>
+          <MapPin size={11} /> {property.location} · {property.sqm} sqm
         </div>
         {property.agent && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, borderTop: `1px solid ${theme.color.border}`, paddingTop: 10 }}>
@@ -164,10 +173,9 @@ export function PropertyCard({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: 12,
               }}
             >
-              👤
+              <User size={13} color={theme.color.navy} />
             </div>
             <span style={{ fontFamily: theme.font.body, fontSize: 11, fontWeight: 700, color: theme.color.navy }}>
               {property.agent.full_name}
@@ -187,7 +195,6 @@ const iconButtonStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: 13,
   boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
   textDecoration: 'none',
 }

@@ -1,5 +1,6 @@
 // app/not-found.tsx
 import Link from 'next/link'
+import { HomeIcon } from 'lucide-react'
 import { theme } from '@/styles/theme'
 
 export default function NotFound() {
@@ -16,7 +17,7 @@ export default function NotFound() {
         textAlign: 'center',
       }}
     >
-      <div style={{ fontSize: 56, marginBottom: 8 }}>🏚️</div>
+      <div style={{ marginBottom: 8 }}><HomeIcon size={52} color={theme.color.gold} /></div>
       <h1 style={{ fontFamily: theme.font.display, color: theme.color.navy, fontSize: 28, margin: '0 0 8px' }}>
         Page not found
       </h1>

@@ -9,6 +9,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { MapPin } from 'lucide-react'
 import { theme } from '@/styles/theme'
 import type { Property } from '@/types/database'
 
@@ -89,8 +90,8 @@ export function PropertyMapView({ properties }: { properties: Property[] }) {
             {selected.currency} {Number(selected.price).toLocaleString()}
           </div>
           <div style={{ fontFamily: theme.font.body, fontSize: 14, marginTop: 4 }}>{selected.name}</div>
-          <div style={{ fontFamily: theme.font.body, fontSize: 12, color: theme.color.textMuted, margin: '6px 0 14px' }}>
-            📍 {selected.location}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontFamily: theme.font.body, fontSize: 12, color: theme.color.textMuted, margin: '6px 0 14px' }}>
+            <MapPin size={12} /> {selected.location}
           </div>
           {selected.amenities?.length > 0 && (
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>

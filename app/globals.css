@@ -18,3 +18,31 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+/* Navbar responsive collapse — CSS controls desktop/mobile
+   visibility so there's no JS viewport check (avoids a
+   hydration mismatch between server and client render).
+   React state only toggles the mobile panel open/closed once
+   it's already visible per the media query below. */
+.navbar-desktop-links {
+  display: flex;
+}
+.navbar-hamburger {
+  display: none;
+}
+.navbar-mobile-panel {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .navbar-desktop-links {
+    display: none;
+  }
+  .navbar-hamburger {
+    display: flex;
+  }
+  .navbar-mobile-panel.open {
+    display: flex;
+  }
+}
+

@@ -7,6 +7,7 @@
 // each kind at submit time.
 
 import { useRef, useState } from 'react'
+import { FolderOpen, Star, X } from 'lucide-react'
 import { theme } from '@/styles/theme'
 
 export interface ImageSlot {
@@ -56,7 +57,7 @@ export function ImageUploadZone({
           background: dragging ? '#fffbf2' : '#fafafa',
         }}
       >
-        <div style={{ fontSize: 26, marginBottom: 6 }}>📁</div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 6 }}><FolderOpen size={28} color={theme.color.textMuted} /></div>
         <div style={{ fontFamily: theme.font.body, fontSize: 13, color: '#666' }}>
           Drag photos here, or <span style={{ color: theme.color.gold, fontWeight: 700 }}>browse</span>
         </div>
@@ -123,18 +124,18 @@ export function ImageUploadZone({
                     onClick={(e) => { e.stopPropagation(); onSetPrimary(slot.tempId) }}
                     title="Set as primary photo"
                     aria-label="Set as primary photo"
-                    style={{ background: theme.color.gold, border: 'none', color: '#fff', borderRadius: '50%', width: 26, height: 26, cursor: 'pointer', fontSize: 12 }}
+                    style={{ background: theme.color.gold, border: 'none', color: '#fff', borderRadius: '50%', width: 26, height: 26, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                   >
-                    ★
+                    <Star size={13} fill="#fff" />
                   </button>
                   <button
                     type="button"
                     onClick={(e) => { e.stopPropagation(); onRemove(slot.tempId) }}
                     title="Remove"
                     aria-label="Remove photo"
-                    style={{ background: theme.color.red, border: 'none', color: '#fff', borderRadius: '50%', width: 26, height: 26, cursor: 'pointer', fontSize: 13 }}
+                    style={{ background: theme.color.red, border: 'none', color: '#fff', borderRadius: '50%', width: 26, height: 26, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                   >
-                    ✕
+                    <X size={14} />
                   </button>
                 </div>
               </div>

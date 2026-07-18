@@ -5,6 +5,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { Home, Key, ClipboardList, CalendarClock, type LucideIcon } from 'lucide-react'
 import { useAuthContext } from './AuthProvider'
 import { DeleteConfirmModal } from './DeleteConfirmModal'
 import { InviteUserModal } from './InviteUserModal'
@@ -41,11 +42,11 @@ export function Dashboard({
 
   const isAdmin = profile.role === 'admin'
 
-  const stats = [
-    { label: isAdmin ? 'All Listings' : 'My Listings', value: properties.length, icon: '🏠' },
-    { label: 'For Sale', value: properties.filter((p) => p.type === 'For Sale').length, icon: '🔑' },
-    { label: 'For Rent', value: properties.filter((p) => p.type === 'For Rent').length, icon: '📋' },
-    { label: 'Viewing Requests', value: requests.length, icon: '📅' },
+  const stats: { label: string; value: number; icon: LucideIcon }[] = [
+    { label: isAdmin ? 'All Listings' : 'My Listings', value: properties.length, icon: Home },
+    { label: 'For Sale', value: properties.filter((p) => p.type === 'For Sale').length, icon: Key },
+    { label: 'For Rent', value: properties.filter((p) => p.type === 'For Rent').length, icon: ClipboardList },
+    { label: 'Viewing Requests', value: requests.length, icon: CalendarClock },
   ]
 
   const filteredUsers = users.filter((u) => {
@@ -187,7 +188,7 @@ export function Dashboard({
       <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', margin: '28px 0 36px' }}>
         {stats.map((s) => (
           <div key={s.label} style={{ background: '#fff', borderRadius: 10, padding: '20px 24px', flex: '1 1 140px', boxShadow: theme.shadow.card }}>
-            <div style={{ fontSize: 26, marginBottom: 8 }}>{s.icon}</div>
+            <div style={{ marginBottom: 8 }}><s.icon size={26} color={theme.color.gold} /></div>
             <div style={{ fontFamily: theme.font.display, fontSize: 26, fontWeight: 700, color: theme.color.navy }}>{s.value}</div>
             <div style={{ fontFamily: theme.font.body, fontSize: 12, color: theme.color.textMuted }}>{s.label}</div>
           </div>

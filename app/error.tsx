@@ -5,6 +5,7 @@
 // error boundaries. Catches unhandled errors in this route segment
 // and below, showing this instead of Next's bare default error page.
 import { useEffect } from 'react'
+import { TriangleAlert } from 'lucide-react'
 import { theme } from '@/styles/theme'
 
 export default function Error({
@@ -31,7 +32,7 @@ export default function Error({
         textAlign: 'center',
       }}
     >
-      <div style={{ fontSize: 56, marginBottom: 8 }}>⚠️</div>
+      <div style={{ marginBottom: 8 }}><TriangleAlert size={52} color={theme.color.red} /></div>
       <h1 style={{ fontFamily: theme.font.display, color: theme.color.navy, fontSize: 28, margin: '0 0 8px' }}>
         Something went wrong
       </h1>
