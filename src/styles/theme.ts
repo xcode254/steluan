@@ -35,3 +35,16 @@ export const theme = {
 
 export const roleBadgeColor = (role: string) =>
   role === 'admin' ? '#8e44ad' : role === 'agent' ? theme.color.gold : '#7f8c8d'
+
+// size_value is a raw number; size_unit says what unit it's in — no
+// conversion happens anywhere, this just formats the pair with a
+// sensible label and decimal precision per unit (acres/ha commonly
+// use fractional values like 0.5; sqm listings are normally whole
+// numbers).
+export function formatSize(sizeValue: number, sizeUnit: string): string {
+  const unitLabel = sizeUnit === 'acres' ? 'acres' : sizeUnit === 'ha' ? 'ha' : 'sqm'
+  const formatted = sizeUnit === 'sqm'
+    ? Number(sizeValue).toLocaleString()
+    : Number(sizeValue).toLocaleString(undefined, { maximumFractionDigits: 2 })
+  return `${formatted} ${unitLabel}`
+}

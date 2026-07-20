@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { BedDouble, Ruler, MapPin, User, Pencil, Trash2 } from 'lucide-react'
 import { useAuthContext } from './AuthProvider'
 import { canEditProperty, can } from '@/lib/auth'
-import { theme } from '@/styles/theme'
+import { theme, formatSize } from '@/styles/theme'
 import type { Property } from '@/types/database'
 
 const TAG_COLOR: Record<string, string> = {
@@ -95,7 +95,7 @@ export function PropertyCard({
           }}
         >
           {property.category === 'land' ? (
-            <><Ruler size={11} /> {property.sqm} sqm</>
+            <><Ruler size={11} /> {formatSize(property.size_value, property.size_unit)}</>
           ) : (
             <><BedDouble size={11} /> {property.beds}</>
           )}
@@ -160,7 +160,7 @@ export function PropertyCard({
           {property.name}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: theme.color.textMuted, fontSize: 11, fontFamily: theme.font.body, margin: '4px 0 10px' }}>
-          <MapPin size={11} /> {property.location} · {property.sqm} sqm
+          <MapPin size={11} /> {property.location} · {formatSize(property.size_value, property.size_unit)}
         </div>
         {property.agent && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, borderTop: `1px solid ${theme.color.border}`, paddingTop: 10 }}>

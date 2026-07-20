@@ -8,6 +8,11 @@ export type PropertyType     = 'For Sale' | 'For Rent'
 export type PropertyCategory = 'house' | 'apartment' | 'land' | 'commercial'
 export type PropertyTag      = 'Featured' | 'New' | 'Hot'
 export type ViewingStatus    = 'pending' | 'confirmed' | 'cancelled' | 'completed'
+// size_value is a raw number; size_unit says what unit it's in — no
+// conversion is stored, so "2" + 'acres' displays as "2 acres" as-is.
+// Non-land properties always stay 'sqm'; only the land form exposes
+// a unit picker.
+export type SizeUnit         = 'sqm' | 'acres' | 'ha'
 
 export interface Profile {
   id:         string
@@ -32,7 +37,8 @@ export interface Property {
   status:        PropertyStatus
   beds:          number
   baths:         number
-  sqm:           number
+  size_value:    number
+  size_unit:     SizeUnit
   location:      string
   latitude:      number | null
   longitude:     number | null
@@ -154,6 +160,7 @@ export interface Database {
       property_category: PropertyCategory
       property_tag:      PropertyTag
       viewing_status:    ViewingStatus
+      size_unit:         SizeUnit
     }
     // Present as an empty placeholder — no composite types defined.
     CompositeTypes: {

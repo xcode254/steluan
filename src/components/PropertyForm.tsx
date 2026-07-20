@@ -7,7 +7,7 @@ import { useAuthContext } from './AuthProvider'
 import { ImageUploadZone, type ImageSlot } from './ImageUploadZone'
 import { createProperty, updateProperty, uploadPropertyImage, deletePropertyImage, setPrimaryImage } from '@/lib/properties'
 import { theme } from '@/styles/theme'
-import type { Property, PropertyType, PropertyCategory, PropertyTag, PropertyStatus } from '@/types/database'
+import type { Property, PropertyType, PropertyCategory, PropertyTag, PropertyStatus, SizeUnit } from '@/types/database'
 
 let tempCounter = 0
 const nextTempId = () => `slot-${Date.now()}-${tempCounter++}`
@@ -26,11 +26,27 @@ export function PropertyForm({ property }: { property?: Property }) {
   const [status, setStatus]       = useState<PropertyStatus>(property?.status ?? 'active')
   const [beds, setBeds]           = useState(property?.beds?.toString() ?? '3')
   const [baths, setBaths]         = useState(property?.baths?.toString() ?? '2')
-  const [sqm, setSqm]             = useState(property?.sqm?.toString() ?? '150')
+  const [sizeValue, setSizeValue] = useState(property?.size_value?.toString() ?? '150')
+  const [sizeUnit, setSizeUnit]   = useState<SizeUnit>(property?.size_unit ?? 'sqm')
   const [location, setLocation]   = useState(property?.location ?? '')
   const [amenities, setAmenities] = useState(property?.amenities?.join(', ') ?? '')
 
   const isLand = category === 'land'
+
+  // Only land exposes a unit picker — switching away from land
+  // resets to sqm so non-land listings never end up stored in
+  // acres/ha, and switching into land defaults to acres (Kenyan land
+  // is conventionally sold in acres more often than sqm or ha).
+  function handleCategoryChange(next: PropertyCategory) {
+    setCategory(next)
+    if (next === 'land' && sizeUnit === 'sqm') {
+      setSizeUnit('acres')
+      if (sizeValue === '150') setSizeValue('1')
+    } else if (next !== 'land' && sizeUnit !== 'sqm') {
+      setSizeUnit('sqm')
+      setSizeValue('150')
+    }
+  }
 
   // Unified image slots — existing DB images + newly picked local files
   const existingMeta = new Map((property?.images ?? []).map((img) => [img.id, img]))
@@ -90,6 +106,7 @@ export function PropertyForm({ property }: { property?: Property }) {
     if (!name.trim())     return setError('Property name is required.')
     if (!location.trim()) return setError('Location is required.')
     if (!price || Number(price) <= 0) return setError('Enter a valid price.')
+    if (!sizeValue || Number(sizeValue) <= 0) return setError(isLand ? 'Enter a valid plot size.' : 'Enter a valid size in sqm.')
     if (slots.length === 0) return setError('Upload at least one photo.')
     if (!user) return setError('You must be logged in.')
 
@@ -105,7 +122,7 @@ export function PropertyForm({ property }: { property?: Property }) {
         propertyId = property.id
         await updateProperty(propertyId, {
           name, description, price: Number(price), type, category, tag, status,
-          beds: bedsVal, baths: bathsVal, sqm: Number(sqm),
+          beds: bedsVal, baths: bathsVal, size_value: Number(sizeValue), size_unit: sizeUnit,
           location, amenities: amenitiesArr,
         })
 
@@ -118,7 +135,7 @@ export function PropertyForm({ property }: { property?: Property }) {
         const created = await createProperty({
           agent_id: user.id, name, description, price: Number(price),
           currency: 'KES', type, category, tag, status: 'active',
-          beds: bedsVal, baths: bathsVal, sqm: Number(sqm),
+          beds: bedsVal, baths: bathsVal, size_value: Number(sizeValue), size_unit: sizeUnit,
           location, latitude: null, longitude: null,
           amenities: amenitiesArr, primary_image: null,
         })
@@ -177,7 +194,7 @@ export function PropertyForm({ property }: { property?: Property }) {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <Field label="Category">
-              <select value={category} onChange={(e) => setCategory(e.target.value as PropertyCategory)} style={inputStyle}>
+              <select value={category} onChange={(e) => handleCategoryChange(e.target.value as PropertyCategory)} style={inputStyle}>
                 <option value="house">House</option>
                 <option value="apartment">Apartment</option>
                 <option value="land">Land</option>
@@ -217,14 +234,23 @@ export function PropertyForm({ property }: { property?: Property }) {
           </Field>
 
           {isLand ? (
-            <Field label="Plot size (sqm)" required>
-              <input type="number" min="1" value={sqm} onChange={(e) => setSqm(e.target.value)} style={inputStyle} />
-            </Field>
+            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 12 }}>
+              <Field label="Plot size" required>
+                <input type="number" min="0.01" step="0.01" value={sizeValue} onChange={(e) => setSizeValue(e.target.value)} style={inputStyle} />
+              </Field>
+              <Field label="Unit">
+                <select value={sizeUnit} onChange={(e) => setSizeUnit(e.target.value as SizeUnit)} style={inputStyle}>
+                  <option value="acres">Acres</option>
+                  <option value="ha">Hectares</option>
+                  <option value="sqm">Sqm</option>
+                </select>
+              </Field>
+            </div>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
               <Field label="Beds"><input type="number" min="0" value={beds} onChange={(e) => setBeds(e.target.value)} style={inputStyle} /></Field>
               <Field label="Baths"><input type="number" min="0" value={baths} onChange={(e) => setBaths(e.target.value)} style={inputStyle} /></Field>
-              <Field label="Sqm"><input type="number" min="1" value={sqm} onChange={(e) => setSqm(e.target.value)} style={inputStyle} /></Field>
+              <Field label="Sqm"><input type="number" min="1" value={sizeValue} onChange={(e) => setSizeValue(e.target.value)} style={inputStyle} /></Field>
             </div>
           )}
 

@@ -9,7 +9,7 @@ import { useAuthContext } from './AuthProvider'
 import { canEditProperty } from '@/lib/auth'
 import { ViewingRequestForm } from './ViewingRequestForm'
 import { PropertyCard } from './PropertyCard'
-import { theme } from '@/styles/theme'
+import { theme, formatSize } from '@/styles/theme'
 import type { Property } from '@/types/database'
 
 export function PropertyDetailView({
@@ -145,7 +145,7 @@ export function PropertyDetailView({
                   <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><Bath size={15} /> {property.baths} baths</span>
                 </>
               )}
-              <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><Ruler size={15} /> {property.sqm} sqm</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><Ruler size={15} /> {formatSize(property.size_value, property.size_unit)}</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: 5, textTransform: 'capitalize' }}><Tag size={15} /> {property.category}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: theme.color.textMuted, fontSize: 12, fontFamily: theme.font.body, marginBottom: 16 }}>
