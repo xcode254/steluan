@@ -133,12 +133,18 @@ export function PropertyDetailView({
           )}
         </div>
 
-        <div style={{ flex: '1 1 300px', minWidth: 280 }}>
+        {/* Sticky so price/agent/viewing-request stays visible while
+            scrolling the gallery, description, and amenities — the
+            split-panel pattern from Compass-style listing sites,
+            where buyers process photos and key details together
+            rather than losing one while reading the other. top
+            offset accounts for the sticky navbar (62px) plus margin. */}
+        <div style={{ flex: '1 1 300px', minWidth: 280, position: 'sticky', top: 82, alignSelf: 'flex-start' }}>
           <div style={{ background: '#fff', borderRadius: 12, padding: 24, boxShadow: theme.shadow.card, marginBottom: 18 }}>
-            <div style={{ fontFamily: theme.font.display, fontSize: 26, fontWeight: 700, color: theme.color.navy, marginBottom: 14 }}>
+            <div style={{ fontFamily: theme.font.data, fontSize: 26, fontWeight: 600, color: theme.color.navy, marginBottom: 14 }}>
               {property.currency} {Number(property.price).toLocaleString()}
             </div>
-            <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap', marginBottom: 12, fontFamily: theme.font.body, fontSize: 13, color: '#555' }}>
+            <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap', marginBottom: 12, fontFamily: theme.font.data, fontSize: 13, color: '#555' }}>
               {property.category !== 'land' && (
                 <>
                   <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><BedDouble size={15} /> {property.beds} beds</span>
@@ -146,7 +152,7 @@ export function PropertyDetailView({
                 </>
               )}
               <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><Ruler size={15} /> {formatSize(property.size_value, property.size_unit)}</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 5, textTransform: 'capitalize' }}><Tag size={15} /> {property.category}</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 5, textTransform: 'capitalize', fontFamily: theme.font.body }}><Tag size={15} /> {property.category}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: theme.color.textMuted, fontSize: 12, fontFamily: theme.font.body, marginBottom: 16 }}>
               <MapPin size={13} /> {property.location}

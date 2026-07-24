@@ -45,9 +45,14 @@ export function PropertyCard({
         cursor: 'pointer',
       }}
     >
+      {/* Taller crop, less overlaid chrome — the photo does the work,
+          not colored badges competing with it. Only one small tag
+          badge (top-left) plus a single, subtle bottom gradient
+          strip carrying the essential stats — no separate stacked
+          overlays. */}
       <div
         onClick={() => router.push(`/properties/${property.id}`)}
-        style={{ position: 'relative', height: 170, overflow: 'hidden' }}
+        style={{ position: 'relative', height: 220, overflow: 'hidden' }}
       >
         {property.primary_image && (
           <Image
@@ -62,6 +67,19 @@ export function PropertyCard({
             }}
           />
         )}
+
+        {/* Subtle bottom gradient instead of a solid dark badge
+            background — lets the photo show through while stats
+            stay legible. */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(to top, rgba(13,31,60,0.55) 0%, rgba(13,31,60,0) 40%)',
+            pointerEvents: 'none',
+          }}
+        />
+
         <span
           style={{
             position: 'absolute',
@@ -78,48 +96,32 @@ export function PropertyCard({
         >
           {property.tag}
         </span>
-        <span
+
+        <div
           style={{
             position: 'absolute',
             bottom: 10,
             left: 10,
+            right: 10,
             display: 'flex',
             alignItems: 'center',
-            gap: 4,
-            background: 'rgba(13,31,60,0.8)',
+            justifyContent: 'space-between',
             color: '#fff',
-            borderRadius: 4,
-            padding: '2px 9px',
-            fontSize: 10,
+            fontSize: 11,
             fontFamily: theme.font.body,
           }}
         >
-          {property.category === 'land' ? (
-            <><Ruler size={11} /> {formatSize(property.size_value, property.size_unit)}</>
-          ) : (
-            <><BedDouble size={11} /> {property.beds}</>
-          )}
-          <span>· {property.type}</span>
-        </span>
-
-        {property.category !== 'house' && (
-          <span
-            style={{
-              position: 'absolute',
-              bottom: 34,
-              left: 10,
-              background: 'rgba(13,31,60,0.8)',
-              color: '#fff',
-              borderRadius: 4,
-              padding: '2px 9px',
-              fontSize: 10,
-              fontFamily: theme.font.body,
-              textTransform: 'capitalize',
-            }}
-          >
-            {property.category}
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            {property.category === 'land' ? (
+              <><Ruler size={12} /> {formatSize(property.size_value, property.size_unit)}</>
+            ) : (
+              <><BedDouble size={12} /> {property.beds} beds</>
+            )}
           </span>
-        )}
+          <span style={{ fontSize: 10, opacity: 0.9, textTransform: 'capitalize' }}>
+            {property.category !== 'house' ? property.category : property.type}
+          </span>
+        </div>
 
         {(showEdit || showDelete) && (
           <div style={{ position: 'absolute', top: 10, right: 10, display: 'flex', gap: 6 }}>
@@ -151,7 +153,7 @@ export function PropertyCard({
 
       <div onClick={() => router.push(`/properties/${property.id}`)} style={{ padding: '12px 14px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <span style={{ color: theme.color.navy, fontFamily: theme.font.display, fontSize: 16, fontWeight: 700 }}>
+          <span style={{ color: theme.color.navy, fontFamily: theme.font.data, fontSize: 16, fontWeight: 600 }}>
             {property.currency} {Number(property.price).toLocaleString()}
           </span>
           <span style={{ color: theme.color.textMuted, fontSize: 11, fontFamily: theme.font.body }}>{property.type}</span>
@@ -160,7 +162,7 @@ export function PropertyCard({
           {property.name}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: theme.color.textMuted, fontSize: 11, fontFamily: theme.font.body, margin: '4px 0 10px' }}>
-          <MapPin size={11} /> {property.location} · {formatSize(property.size_value, property.size_unit)}
+          <MapPin size={11} /> {property.location} · <span style={{ fontFamily: theme.font.data }}>{formatSize(property.size_value, property.size_unit)}</span>
         </div>
         {property.agent && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, borderTop: `1px solid ${theme.color.border}`, paddingTop: 10 }}>

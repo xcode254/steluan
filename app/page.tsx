@@ -18,9 +18,21 @@ export default async function HomePage() {
     .order('created_at', { ascending: false })
     .limit(8)
 
+  // Real counts for the trust strip in Hero — not decorative
+  // placeholder numbers. head:true skips fetching rows, just the count.
+  const { count: listingCount } = await supabase
+    .from('properties')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'active')
+
+  const { count: agentCount } = await supabase
+    .from('profiles')
+    .select('*', { count: 'exact', head: true })
+    .in('role', ['agent', 'admin'])
+
   return (
     <main>
-      <Hero />
+      <Hero listingCount={listingCount ?? 0} agentCount={agentCount ?? 0} />
 
       <div style={{ maxWidth: 1160, margin: '0 auto', padding: '64px 32px 40px' }}>
         <h2 style={{ fontFamily: theme.font.display, color: theme.color.navy, fontSize: 24, marginBottom: 22 }}>

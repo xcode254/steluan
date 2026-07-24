@@ -86,7 +86,7 @@ export function PropertyMapView({ properties }: { properties: Property[] }) {
               />
             </div>
           )}
-          <div style={{ fontFamily: theme.font.display, fontWeight: 700, color: theme.color.navy, fontSize: 18 }}>
+          <div style={{ fontFamily: theme.font.data, fontWeight: 600, color: theme.color.navy, fontSize: 18 }}>
             {selected.currency} {Number(selected.price).toLocaleString()}
           </div>
           <div style={{ fontFamily: theme.font.body, fontSize: 14, marginTop: 4 }}>{selected.name}</div>

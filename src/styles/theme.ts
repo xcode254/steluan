@@ -18,8 +18,15 @@ export const theme = {
     border:    '#e7e2d8',
   },
   font: {
-    display: "'Playfair Display', Georgia, serif",
-    body:    "'Lato', -apple-system, sans-serif",
+    // These map to the CSS variables next/font/google generates in
+    // app/layout.tsx (--font-display, --font-body, --font-data) —
+    // never hardcode a font name directly in a font-family string;
+    // if it's not loaded via next/font, it silently won't render.
+    display: "var(--font-display), Georgia, serif",
+    body:    "var(--font-body), -apple-system, sans-serif",
+    // Reserved for numbers only — prices, beds/baths/sqm stats,
+    // dashboard figures. Never used for prose or labels.
+    data:    "var(--font-data), 'SF Mono', monospace",
   },
   radius: {
     sm: 6,

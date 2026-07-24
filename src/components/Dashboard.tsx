@@ -189,7 +189,7 @@ export function Dashboard({
         {stats.map((s) => (
           <div key={s.label} style={{ background: '#fff', borderRadius: 10, padding: '20px 24px', flex: '1 1 140px', boxShadow: theme.shadow.card }}>
             <div style={{ marginBottom: 8 }}><s.icon size={26} color={theme.color.gold} /></div>
-            <div style={{ fontFamily: theme.font.display, fontSize: 26, fontWeight: 700, color: theme.color.navy }}>{s.value}</div>
+            <div style={{ fontFamily: theme.font.data, fontSize: 26, fontWeight: 600, color: theme.color.navy }}>{s.value}</div>
             <div style={{ fontFamily: theme.font.body, fontSize: 12, color: theme.color.textMuted }}>{s.label}</div>
           </div>
         ))}
@@ -222,7 +222,7 @@ export function Dashboard({
                   <td style={{ padding: '10px 14px', fontFamily: theme.font.body, fontSize: 13, fontWeight: 700, color: theme.color.navy }}>
                     <Link href={`/properties/${p.id}`} style={{ color: 'inherit' }}>{p.name}</Link>
                   </td>
-                  <td style={{ padding: '10px 14px', fontFamily: theme.font.body, fontSize: 12 }}>
+                  <td style={{ padding: '10px 14px', fontFamily: theme.font.data, fontSize: 12 }}>
                     {p.currency} {Number(p.price).toLocaleString()}
                   </td>
                   <td style={{ padding: '10px 14px', fontFamily: theme.font.body, fontSize: 12, textTransform: 'capitalize' }}>{p.status}</td>

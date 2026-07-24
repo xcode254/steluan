@@ -4,9 +4,16 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { Building2, Users, Search } from 'lucide-react'
 import { theme } from '@/styles/theme'
 
-export function Hero() {
+export function Hero({
+  listingCount = 0,
+  agentCount = 0,
+}: {
+  listingCount?: number
+  agentCount?: number
+}) {
   const router = useRouter()
   const [category, setCategory] = useState('')
   const [type, setType] = useState('')
@@ -49,36 +56,65 @@ export function Hero() {
             background: 'linear-gradient(to right, rgba(13,31,60,0.88) 45%, rgba(13,31,60,0.25))',
           }}
         />
-        <div style={{ position: 'absolute', top: '50%', left: 48, transform: 'translateY(-58%)' }}>
-          <h1 style={{ color: '#fff', fontFamily: theme.font.display, fontSize: 40, fontWeight: 700, margin: 0, lineHeight: 1.12 }}>
-            Find Your
-            <br />
-            Dream Property
+        {/* Headline sized down slightly and the search bar enlarged
+            below — search owns the hero rather than sharing top
+            billing with a big headline, closer to how Zillow treats
+            search as the actual product rather than a secondary
+            element under branding. */}
+        <div style={{ position: 'absolute', top: '42%', left: 48, transform: 'translateY(-50%)' }}>
+          <h1 style={{ color: '#fff', fontFamily: theme.font.display, fontSize: 32, fontWeight: 700, margin: 0, lineHeight: 1.15 }}>
+            Find Your Dream Property
           </h1>
-          <p style={{ color: 'rgba(255,255,255,0.8)', fontFamily: theme.font.body, fontSize: 14, marginTop: 8 }}>
+          <p style={{ color: 'rgba(255,255,255,0.8)', fontFamily: theme.font.body, fontSize: 14, marginTop: 6 }}>
             Explore the best properties for sale &amp; rent in Kenya
           </p>
+
+          {/* Real trust stats, not decorative — fetched server-side
+              in app/page.tsx. Credibility signals belong above the
+              fold as actual design elements, not buried lower down. */}
+          {(listingCount > 0 || agentCount > 0) && (
+            <div style={{ display: 'flex', gap: 20, marginTop: 16 }}>
+              {listingCount > 0 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#fff' }}>
+                  <Building2 size={16} color={theme.color.gold} />
+                  <span style={{ fontFamily: theme.font.data, fontSize: 14, fontWeight: 600 }}>{listingCount}+</span>
+                  <span style={{ fontFamily: theme.font.body, fontSize: 12, opacity: 0.85 }}>listings</span>
+                </div>
+              )}
+              {agentCount > 0 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#fff' }}>
+                  <Users size={16} color={theme.color.gold} />
+                  <span style={{ fontFamily: theme.font.data, fontSize: 14, fontWeight: 600 }}>{agentCount}+</span>
+                  <span style={{ fontFamily: theme.font.body, fontSize: 12, opacity: 0.85 }}>verified agents</span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
+      {/* Enlarged padding and a bolder, icon-led Search button — the
+          search bar is the primary interactive element on this page,
+          sized to feel that way rather than like one form among
+          several page elements. */}
       <form
         onSubmit={handleSearch}
         style={{
           position: 'absolute',
-          bottom: -26,
+          bottom: -30,
           left: '50%',
           transform: 'translateX(-50%)',
           background: '#fff',
-          borderRadius: 8,
-          padding: '14px 18px',
+          borderRadius: 10,
+          padding: '18px 22px',
           display: 'flex',
           flexWrap: 'wrap',
           gap: 10,
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 8px 40px rgba(0,0,0,0.18)',
-          width: '90%',
-          maxWidth: 720,
+          boxShadow: '0 12px 48px rgba(13,31,60,0.22)',
+          width: '92%',
+          maxWidth: 780,
         }}
       >
         <select value={category} onChange={(e) => setCategory(e.target.value)} style={selectStyle}>
@@ -119,16 +155,19 @@ export function Hero() {
             background: theme.color.gold,
             border: 'none',
             color: '#fff',
-            borderRadius: 4,
-            padding: '10px 26px',
+            borderRadius: 6,
+            padding: '12px 30px',
             fontFamily: theme.font.body,
             fontSize: 14,
             fontWeight: 700,
             cursor: 'pointer',
             whiteSpace: 'nowrap',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
           }}
         >
-          Search
+          <Search size={16} /> Search
         </button>
       </form>
     </div>
@@ -138,8 +177,8 @@ export function Hero() {
 const selectStyle: React.CSSProperties = {
   flex: '1 1 120px',
   border: `1px solid ${theme.color.border}`,
-  borderRadius: 4,
-  padding: '9px 10px',
+  borderRadius: 6,
+  padding: '11px 12px',
   fontFamily: theme.font.body,
   fontSize: 13,
   color: '#333',
