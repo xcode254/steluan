@@ -52,7 +52,7 @@ export function PropertyCard({
           overlays. */}
       <div
         onClick={() => router.push(`/properties/${property.id}`)}
-        style={{ position: 'relative', height: 220, overflow: 'hidden' }}
+        style={{ position: 'relative', height: 250, overflow: 'hidden' }}
       >
         {property.primary_image && (
           <Image

@@ -40,7 +40,7 @@ export function Hero({
     // fixed; the form is a sibling of that box, not a descendant, so
     // it isn't subject to the same clipping.
     <div style={{ position: 'relative' }}>
-      <div style={{ position: 'relative', height: 340, overflow: 'hidden' }}>
+      <div style={{ position: 'relative', height: 420, overflow: 'hidden' }}>
         <Image
           src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1400&q=80"
           alt=""

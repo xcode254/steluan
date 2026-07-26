@@ -144,7 +144,7 @@ export function Dashboard({
   }
 
   return (
-    <main style={{ maxWidth: 1160, margin: '0 auto', padding: '36px 32px' }}>
+    <main style={{ maxWidth: theme.layout.maxWidth, margin: '0 auto', padding: '36px 32px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
         <div>
           <h1 style={{ fontFamily: theme.font.display, color: theme.color.navy, fontSize: 24, margin: 0 }}>

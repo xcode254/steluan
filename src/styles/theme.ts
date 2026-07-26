@@ -4,6 +4,15 @@
 // values in each file.
 
 export const theme = {
+  // Was 1160 hardcoded independently in 5+ files. Bumped to 1320 —
+  // on typical wide desktop viewports (1920px+), a 1160px-capped
+  // container leaves very large empty margins on either side, making
+  // photography (the thing that's supposed to carry visual weight)
+  // read as small relative to the page. Centralized here so it's a
+  // one-line change everywhere going forward, not a search-and-replace.
+  layout: {
+    maxWidth: 1320,
+  },
   color: {
     navy:      '#0d1f3c',
     navyLight: '#16294f',

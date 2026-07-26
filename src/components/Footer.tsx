@@ -14,7 +14,7 @@ export function Footer() {
     <footer style={{ background: theme.color.navy, marginTop: 60 }}>
       <div
         style={{
-          maxWidth: 1160,
+          maxWidth: theme.layout.maxWidth,
           margin: '0 auto',
           padding: '40px 32px',
           display: 'flex',

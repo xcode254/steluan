@@ -34,7 +34,7 @@ export default async function HomePage() {
     <main>
       <Hero listingCount={listingCount ?? 0} agentCount={agentCount ?? 0} />
 
-      <div style={{ maxWidth: 1160, margin: '0 auto', padding: '64px 32px 40px' }}>
+      <div style={{ maxWidth: theme.layout.maxWidth, margin: '0 auto', padding: '64px 32px 40px' }}>
         <h2 style={{ fontFamily: theme.font.display, color: theme.color.navy, fontSize: 24, marginBottom: 22 }}>
           Featured Properties
         </h2>

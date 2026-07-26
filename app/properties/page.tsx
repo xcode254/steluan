@@ -80,7 +80,7 @@ export default async function PropertiesPage({
   ].filter(Boolean)
 
   return (
-    <main style={{ maxWidth: 1160, margin: '0 auto', padding: '40px 32px' }}>
+    <main style={{ maxWidth: theme.layout.maxWidth, margin: '0 auto', padding: '40px 32px' }}>
       <h1 style={{ fontFamily: theme.font.display, color: theme.color.navy, fontSize: 26, marginBottom: 6 }}>
         All Properties
       </h1>

@@ -29,7 +29,7 @@ export function PropertyDetailView({
   const showEdit = canEditProperty(user, property.agent_id)
 
   return (
-    <main style={{ maxWidth: 1160, margin: '0 auto', padding: '36px 32px' }}>
+    <main style={{ maxWidth: theme.layout.maxWidth, margin: '0 auto', padding: '36px 32px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
         <Link href="/properties" style={{ fontFamily: theme.font.body, fontSize: 14, color: theme.color.navy }}>
           ← Back to listings
@@ -57,7 +57,7 @@ export function PropertyDetailView({
 
       <div style={{ display: 'flex', gap: 36, flexWrap: 'wrap' }}>
         <div style={{ flex: '2 1 420px' }}>
-          <div style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', height: 360, background: '#eee' }}>
+          <div style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', height: 460, background: '#eee' }}>
             {images[idx] && (
               <Image
                 src={images[idx].url}

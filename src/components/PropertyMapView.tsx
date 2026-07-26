@@ -76,7 +76,7 @@ export function PropertyMapView({ properties }: { properties: Property[] }) {
       {selected && (
         <div style={{ flex: '1 1 260px', minWidth: 240, background: '#fff', borderRadius: 12, boxShadow: theme.shadow.card, padding: 20 }}>
           {selected.primary_image && (
-            <div style={{ position: 'relative', width: '100%', height: 140, borderRadius: 8, overflow: 'hidden', marginBottom: 14 }}>
+            <div style={{ position: 'relative', width: '100%', height: 170, borderRadius: 8, overflow: 'hidden', marginBottom: 14 }}>
               <Image
                 src={selected.primary_image}
                 alt={selected.name}
