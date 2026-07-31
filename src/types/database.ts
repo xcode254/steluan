@@ -124,15 +124,16 @@ export interface Database {
     Functions: {
       search_properties: {
         Args: {
-          query?:         string
-          prop_type?:     string
-          prop_category?: string
-          min_price?:     number
-          max_price?:     number
-          min_beds?:      number
-          location_q?:    string
-          lim?:           number
-          offs?:          number
+          query?:            string
+          prop_type?:        string
+          prop_category?:    string
+          min_price?:        number
+          max_price?:        number
+          min_beds?:         number
+          location_q?:       string
+          amenities_filter?: string[]
+          lim?:              number
+          offs?:             number
         }
         Returns: Property[]
       }

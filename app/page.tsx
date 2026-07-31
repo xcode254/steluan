@@ -5,6 +5,8 @@ import { Hero } from '@/components/Hero'
 import { PropertyGrid } from '@/components/PropertyGrid'
 import { WhyChooseUs } from '@/components/WhyChooseUs'
 import { FindByLocation } from '@/components/FindByLocation'
+import { ListPropertyCTA } from '@/components/ListPropertyCTA'
+import { PropertyCategories } from '@/components/PropertyCategories'
 import { theme } from '@/styles/theme'
 import type { Property } from '@/types/database'
 
@@ -62,6 +64,7 @@ export default async function HomePage() {
           <div style={{ flex: '1 1 280px', minWidth: 260 }}>
             <WhyChooseUs />
             <FindByLocation />
+            <ListPropertyCTA />
           </div>
         </div>
 
@@ -83,6 +86,8 @@ export default async function HomePage() {
             <PropertyGrid initialProperties={(newListings as Property[]) ?? []} showViewToggle={false} />
           )}
         </div>
+
+        <PropertyCategories />
       </div>
     </main>
   )

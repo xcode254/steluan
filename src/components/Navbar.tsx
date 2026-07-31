@@ -4,7 +4,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { Heart, ChevronDown, Building2, User as UserIcon } from 'lucide-react'
+import { Heart, Bell, ChevronDown, Building2, User as UserIcon } from 'lucide-react'
 import { useAuthContext } from './AuthProvider'
 import { theme } from '@/styles/theme'
 import { can } from '@/lib/auth'
@@ -110,6 +110,12 @@ export function Navbar() {
         </div>
 
         <div className="navbar-desktop-links" style={{ alignItems: 'center', gap: 18 }}>
+          {/* Visual only — no notifications backend exists yet, so
+              no badge count and no click destination. Unlike Saved
+              (which has a real "coming soon" page), there's nothing
+              honest to link this to yet. */}
+          <Bell size={18} color={theme.color.textMuted} />
+
           <Link
             href="/saved"
             style={{ display: 'flex', alignItems: 'center', gap: 6, color: theme.color.navy, fontFamily: theme.font.body, fontSize: 13 }}

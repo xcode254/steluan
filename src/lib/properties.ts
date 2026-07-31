@@ -50,27 +50,29 @@ export async function getProperty(id: string): Promise<Property> {
 }
 
 export async function searchProperties(params: {
-  query?:    string
-  type?:     string
-  category?: string
-  minPrice?: number
-  maxPrice?: number
-  minBeds?:  number
-  location?: string
-  limit?:    number
-  offset?:   number
+  query?:     string
+  type?:      string
+  category?:  string
+  minPrice?:  number
+  maxPrice?:  number
+  minBeds?:   number
+  location?:  string
+  amenities?: string[]
+  limit?:     number
+  offset?:    number
 }): Promise<Property[]> {
   const supabase = createClient()
   const { data, error } = await supabase.rpc('search_properties', {
-    query:         params.query     ?? '',
-    prop_type:     params.type      ?? null,
-    prop_category: params.category  ?? null,
-    min_price:     params.minPrice  ?? null,
-    max_price:     params.maxPrice  ?? null,
-    min_beds:      params.minBeds   ?? null,
-    location_q:    params.location  ?? null,
-    lim:           params.limit     ?? 20,
-    offs:          params.offset    ?? 0,
+    query:            params.query      ?? '',
+    prop_type:        params.type       ?? null,
+    prop_category:    params.category   ?? null,
+    min_price:        params.minPrice   ?? null,
+    max_price:        params.maxPrice   ?? null,
+    min_beds:         params.minBeds    ?? null,
+    location_q:       params.location   ?? null,
+    amenities_filter: params.amenities?.length ? params.amenities : null,
+    lim:              params.limit      ?? 20,
+    offs:             params.offset      ?? 0,
   })
   if (error) throw toError(error)
   return data as Property[]

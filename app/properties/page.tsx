@@ -20,6 +20,7 @@ export default async function PropertiesPage({
     minPrice?: string
     maxPrice?: string
     minBeds?: string
+    amenities?: string
     sort?: string
     page?: string
   }>
@@ -30,16 +31,23 @@ export default async function PropertiesPage({
   const currentPage = Math.max(1, Number(params.page) || 1)
   const offset = (currentPage - 1) * PAGE_SIZE
 
+  // Quick-filter chips (Hero, PropertyFilters) pass a comma-separated
+  // list — parsed back into an array for the RPC's text[] parameter.
+  const amenitiesList = params.amenities
+    ? params.amenities.split(',').map((a) => a.trim()).filter(Boolean)
+    : null
+
   // Fetch one extra row beyond the page size — its presence tells us
   // there's a next page, without a separate COUNT query just for that.
   const { data: rawResults, error } = await supabase.rpc('search_properties', {
-    query:         params.q ?? '',
-    prop_type:     params.type || null,
-    prop_category: params.category || null,
-    location_q:    params.location || null,
-    min_price:     params.minPrice ? Number(params.minPrice) : null,
-    max_price:     params.maxPrice ? Number(params.maxPrice) : null,
-    min_beds:      params.minBeds  ? Number(params.minBeds)  : null,
+    query:            params.q ?? '',
+    prop_type:        params.type || null,
+    prop_category:    params.category || null,
+    location_q:       params.location || null,
+    min_price:        params.minPrice ? Number(params.minPrice) : null,
+    max_price:        params.maxPrice ? Number(params.maxPrice) : null,
+    min_beds:         params.minBeds  ? Number(params.minBeds)  : null,
+    amenities_filter: amenitiesList,
     lim:  PAGE_SIZE + 1,
     offs: offset,
   })
@@ -77,6 +85,7 @@ export default async function PropertiesPage({
     params.minPrice ? `from KES ${Number(params.minPrice).toLocaleString()}` : null,
     params.maxPrice ? `up to KES ${Number(params.maxPrice).toLocaleString()}` : null,
     params.minBeds ? `${params.minBeds}+ beds` : null,
+    amenitiesList?.length ? amenitiesList.join(', ') : null,
   ].filter(Boolean)
 
   return (

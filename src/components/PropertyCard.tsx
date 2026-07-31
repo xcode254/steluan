@@ -5,7 +5,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { BedDouble, Ruler, MapPin, User, Pencil, Trash2, Heart } from 'lucide-react'
+import { BedDouble, Bath, Ruler, MapPin, User, Pencil, Trash2, Heart } from 'lucide-react'
 import { useAuthContext } from './AuthProvider'
 import { canEditProperty, can } from '@/lib/auth'
 import { theme, formatSize } from '@/styles/theme'
@@ -173,29 +173,60 @@ export function PropertyCard({
         <div style={{ color: theme.color.navy, fontFamily: theme.font.display, fontSize: 13, marginTop: 3 }}>
           {property.name}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: theme.color.textMuted, fontSize: 11, fontFamily: theme.font.body, margin: '4px 0 10px' }}>
-          <MapPin size={11} /> {property.location} · <span style={{ fontFamily: theme.font.data }}>{formatSize(property.size_value, property.size_unit)}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: theme.color.textMuted, fontSize: 11, fontFamily: theme.font.body, margin: '4px 0 8px' }}>
+          <MapPin size={11} /> {property.location}
         </div>
-        {property.agent && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, borderTop: `1px solid ${theme.color.border}`, paddingTop: 10 }}>
-            <div
-              style={{
-                width: 26,
-                height: 26,
-                borderRadius: '50%',
-                background: '#dde4f0',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <User size={13} color={theme.color.navy} />
+
+        {/* Real fields only — beds/baths/sqm. No invented "Cars" stat;
+            we have no parking-count data in the schema. */}
+        <div style={{ display: 'flex', gap: 12, fontFamily: theme.font.data, fontSize: 11, color: '#555', marginBottom: 10 }}>
+          {property.category !== 'land' && (
+            <>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}><BedDouble size={12} /> {property.beds}</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}><Bath size={12} /> {property.baths}</span>
+            </>
+          )}
+          <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}><Ruler size={12} /> {formatSize(property.size_value, property.size_unit)}</span>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: `1px solid ${theme.color.border}`, paddingTop: 10 }}>
+          {property.agent ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div
+                style={{
+                  width: 26,
+                  height: 26,
+                  borderRadius: '50%',
+                  background: '#dde4f0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <User size={13} color={theme.color.navy} />
+              </div>
+              <span style={{ fontFamily: theme.font.body, fontSize: 11, fontWeight: 700, color: theme.color.navy }}>
+                {property.agent.full_name}
+              </span>
             </div>
-            <span style={{ fontFamily: theme.font.body, fontSize: 11, fontWeight: 700, color: theme.color.navy }}>
-              {property.agent.full_name}
-            </span>
-          </div>
-        )}
+          ) : <span />}
+
+          <Link
+            href={`/properties/${property.id}`}
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              border: `1px solid ${theme.color.gold}`,
+              color: theme.color.gold,
+              borderRadius: 6,
+              padding: '5px 12px',
+              fontFamily: theme.font.body,
+              fontSize: 11,
+              fontWeight: 700,
+            }}
+          >
+            View Details
+          </Link>
+        </div>
       </div>
     </div>
   )
