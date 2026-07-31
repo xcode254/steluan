@@ -67,9 +67,13 @@ export function Navbar() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '0 36px',
+          padding: '0 40px',
           height: 72,
-          maxWidth: theme.layout.maxWidth,
+          // Deliberately wider than theme.layout.maxWidth: in the
+          // target the nav spans nearly the full viewport (logo ~38px
+          // from the edge) while the content column below is inset
+          // further. Matching that instead of aligning them exactly.
+          maxWidth: 1800,
           margin: '0 auto',
         }}
       >

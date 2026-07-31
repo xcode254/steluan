@@ -101,7 +101,11 @@ export function PropertyGrid({
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            // auto-fit (not auto-fill): with only 3 featured cards in
+            // a container wide enough for 4, auto-fill would keep an
+            // empty 4th track and leave a visible gap. auto-fit
+            // collapses it so the cards stretch to fill the row.
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
             gap: 20,
           }}
         >

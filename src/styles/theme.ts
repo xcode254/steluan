@@ -4,14 +4,14 @@
 // values in each file.
 
 export const theme = {
-  // Was 1160 hardcoded independently in 5+ files. Bumped to 1320 —
-  // on typical wide desktop viewports (1920px+), a 1160px-capped
-  // container leaves very large empty margins on either side, making
-  // photography (the thing that's supposed to carry visual weight)
-  // read as small relative to the page. Centralized here so it's a
-  // one-line change everywhere going forward, not a search-and-replace.
+  // Measured against the target layout: content spans ~89% of the
+  // viewport (~1366px of 1536px), not a narrow centered column. 1320
+  // left ~300px of dead margin on each side of a 1920px monitor,
+  // which is what made the page read as mostly white space. 1600 with
+  // 48px padding keeps content wide on large screens while still
+  // capping it so line lengths stay readable on ultrawides.
   layout: {
-    maxWidth: 1320,
+    maxWidth: 1600,
   },
   color: {
     navy:      '#0d1f3c',
