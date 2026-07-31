@@ -5,7 +5,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { BedDouble, Ruler, MapPin, User, Pencil, Trash2 } from 'lucide-react'
+import { BedDouble, Ruler, MapPin, User, Pencil, Trash2, Heart } from 'lucide-react'
 import { useAuthContext } from './AuthProvider'
 import { canEditProperty, can } from '@/lib/auth'
 import { theme, formatSize } from '@/styles/theme'
@@ -27,6 +27,10 @@ export function PropertyCard({
   const { user } = useAuthContext()
   const router = useRouter()
   const [hover, setHover] = useState(false)
+  // UI-only for now — not persisted. Real favorites (a saved_properties
+  // table + RLS + a proper Saved page) is a deliberately deferred
+  // feature, not an oversight.
+  const [saved, setSaved] = useState(false)
 
   const showEdit   = canEditProperty(user, property.agent_id)
   const showDelete = can(user, 'canDelete')
@@ -123,32 +127,40 @@ export function PropertyCard({
           </span>
         </div>
 
-        {(showEdit || showDelete) && (
-          <div style={{ position: 'absolute', top: 10, right: 10, display: 'flex', gap: 6 }}>
-            {showEdit && (
-              <Link
-                href={`/properties/${property.id}/edit`}
-                onClick={(e) => e.stopPropagation()}
-                style={iconButtonStyle}
-                aria-label={`Edit ${property.name}`}
-              >
-                <Pencil size={14} color={theme.color.navy} />
-              </Link>
-            )}
-            {showDelete && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onRequestDelete?.(property)
-                }}
-                style={{ ...iconButtonStyle, border: 'none', cursor: 'pointer' }}
-                aria-label={`Delete ${property.name}`}
+        <div style={{ position: 'absolute', top: 10, right: 10, display: 'flex', gap: 6 }}>
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              setSaved((v) => !v)
+            }}
+            style={{ ...iconButtonStyle, border: 'none', cursor: 'pointer' }}
+            aria-label={saved ? `Remove ${property.name} from saved` : `Save ${property.name}`}
+          >
+            <Heart size={14} color={saved ? theme.color.red : theme.color.navy} fill={saved ? theme.color.red : 'none'} />
+          </button>
+          {showEdit && (
+            <Link
+              href={`/properties/${property.id}/edit`}
+              onClick={(e) => e.stopPropagation()}
+              style={iconButtonStyle}
+              aria-label={`Edit ${property.name}`}
+            >
+              <Pencil size={14} color={theme.color.navy} />
+            </Link>
+          )}
+          {showDelete && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                onRequestDelete?.(property)
+              }}
+              style={{ ...iconButtonStyle, border: 'none', cursor: 'pointer' }}
+              aria-label={`Delete ${property.name}`}
               >
                 <Trash2 size={14} color={theme.color.red} />
               </button>
             )}
           </div>
-        )}
       </div>
 
       <div onClick={() => router.push(`/properties/${property.id}`)} style={{ padding: '12px 14px' }}>
